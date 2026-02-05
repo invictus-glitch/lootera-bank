@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Lootera Bank</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="flash-messages">
+                {% for category, message in messages %}
+                    <div class="flash-message {{ category }}">
+                        <i class="fas fa-{% if category == 'success' %}check-circle{% elif category == 'error' %}exclamation-circle{% else %}info-circle{% endif %}"></i>
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="container">
+            <a href="/" class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-university"></i>
+                </div>
+                Lootera Bank
+            </a>
+            <div class="nav-links">
+                <a href="{{ url_for('index') }}">Home</a>
+                <a href="{{ url_for('create') }}">Create Account</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Login Form -->
+    <div class="transaction-page">
+        <div class="card">
+            <div class="card-header">
+                <div class="hero-logo" style="width: 60px; height: 60px; font-size: 1.5rem; margin-bottom: 1rem;">
+                    <i class="fas fa-lock"></i>
+                </div>
+                <h2>Welcome Back</h2>
+                <p>Enter your credentials to access your account</p>
+            </div>
+
+            <form method="POST" action="{{ url_for('login') }}">
+                <div class="form-group">
+                    <label for="account_number">
+                        <i class="fas fa-id-card"></i> Account Number
+                    </label>
+                    <input 
+                        type="number" 
+                        id="account_number" 
+                        name="account_number" 
+                        placeholder="Enter your 8-digit account number"
+                        required
+                        min="10000000"
+                        max="99999999"
+                        autocomplete="off"
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="pin">
+                        <i class="fas fa-key"></i> PIN
+                    </label>
+                    <input 
+                        type="password" 
+                        id="pin" 
+                        name="pin" 
+                        placeholder="Enter your 4-digit PIN"
+                        required
+                        minlength="4"
+                        maxlength="4"
+                        pattern="[0-9]{4}"
+                        inputmode="numeric"
+                    >
+                </div>
+
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-sign-in-alt"></i>
+                    Login
+                </button>
+            </form>
+
+            <div class="text-center mt-3">
+                <p>Don't have an account? <a href="{{ url_for('create') }}">Create one now</a></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>&copy; 2024 Lootera Bank. All rights reserved. | Secure Digital Banking</p>
+    </footer>
+
+    <!-- Auto-hide flash messages -->
+    <script>
+        setTimeout(() => {
+            const flashMessages = document.querySelectorAll('.flash-message');
+            flashMessages.forEach(msg => {
+                msg.style.opacity = '0';
+                msg.style.transform = 'translateX(100px)';
+                msg.style.transition = 'all 0.4s ease-out';
+                setTimeout(() => msg.remove(), 400);
+            });
+        }, 5000);
+    </script>
+</body>
+</html>

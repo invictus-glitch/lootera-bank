@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Lootera Bank</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="flash-messages">
+                {% for category, message in messages %}
+                    <div class="flash-message {{ category }}">
+                        <i class="fas fa-{% if category == 'success' %}check-circle{% elif category == 'error' %}exclamation-circle{% else %}info-circle{% endif %}"></i>
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="container">
+            <a href="/" class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-university"></i>
+                </div>
+                Lootera Bank
+            </a>
+            <div class="nav-links">
+                <a href="{{ url_for('dashboard') }}">Dashboard</a>
+                <a href="{{ url_for('logout') }}" class="btn btn-danger" style="width: auto; padding: 0.5rem 1rem;">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Dashboard Content -->
+    <div class="dashboard-page">
+        <div class="container">
+            <!-- Welcome Section -->
+            <div class="welcome-section">
+                <h1>Hello, {{ name }}! 👋</h1>
+                <p>Welcome back to your digital banking dashboard</p>
+            </div>
+
+            <!-- Balance Card -->
+            <div class="balance-card">
+                <div class="balance-label">Available Balance</div>
+                <div class="balance-amount">₹{{ "{:,}".format(balance) }}</div>
+                <div class="account-info">
+                    <div class="account-info-item">
+                        <span class="account-info-label">Account Number</span>
+                        <span class="account-info-value">{{ account_number }}</span>
+                    </div>
+                    <div class="account-info-item">
+                        <span class="account-info-label">Transactions</span>
+                        <span class="account-info-value">{{ history_count }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <h3 style="margin-bottom: 1rem;">Quick Actions</h3>
+            <div class="actions-grid">
+                <a href="{{ url_for('deposit') }}" class="action-card deposit">
+                    <div class="action-icon">
+                        <i class="fas fa-arrow-down"></i>
+                    </div>
+                    <h3>Deposit</h3>
+                    <p>Add money to your account</p>
+                </a>
+
+                <a href="{{ url_for('withdraw') }}" class="action-card withdraw">
+                    <div class="action-icon">
+                        <i class="fas fa-arrow-up"></i>
+                    </div>
+                    <h3>Withdraw</h3>
+                    <p>Withdraw cash from account</p>
+                </a>
+
+                <a href="{{ url_for('transfer') }}" class="action-card transfer">
+                    <div class="action-icon">
+                        <i class="fas fa-exchange-alt"></i>
+                    </div>
+                    <h3>Transfer</h3>
+                    <p>Send money to others</p>
+                </a>
+
+                <a href="{{ url_for('history') }}" class="action-card history">
+                    <div class="action-icon">
+                        <i class="fas fa-history"></i>
+                    </div>
+                    <h3>History</h3>
+                    <p>View all transactions</p>
+                </a>
+
+                <a href="{{ url_for('logout') }}" class="action-card logout">
+                    <div class="action-icon">
+                        <i class="fas fa-sign-out-alt"></i>
+                    </div>
+                    <h3>Logout</h3>
+                    <p>Securely exit your account</p>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>&copy; 2024 Lootera Bank. All rights reserved. | Secure Digital Banking</p>
+    </footer>
+
+    <!-- Auto-hide flash messages -->
+    <script>
+        setTimeout(() => {
+            const flashMessages = document.querySelectorAll('.flash-message');
+            flashMessages.forEach(msg => {
+                msg.style.opacity = '0';
+                msg.style.transform = 'translateX(100px)';
+                msg.style.transition = 'all 0.4s ease-out';
+                setTimeout(() => msg.remove(), 400);
+            });
+        }, 5000);
+    </script>
+</body>
+</html>

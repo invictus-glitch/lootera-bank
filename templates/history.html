@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transaction History - Lootera Bank</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="flash-messages">
+                {% for category, message in messages %}
+                    <div class="flash-message {{ category }}">
+                        <i class="fas fa-{% if category == 'success' %}check-circle{% elif category == 'error' %}exclamation-circle{% else %}info-circle{% endif %}"></i>
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="container">
+            <a href="/" class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-university"></i>
+                </div>
+                Lootera Bank
+            </a>
+            <div class="nav-links">
+                <a href="{{ url_for('dashboard') }}">Dashboard</a>
+                <a href="{{ url_for('logout') }}" class="btn btn-danger" style="width: auto; padding: 0.5rem 1rem;">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- History Content -->
+    <div class="history-page">
+        <div class="container">
+            <!-- Header -->
+            <div class="history-header">
+                <div>
+                    <h1>Transaction History</h1>
+                    <p style="color: var(--text-medium);">Account: {{ account_number }} | {{ name }}</p>
+                </div>
+                <a href="{{ url_for('dashboard') }}" class="btn btn-outline" style="width: auto;">
+                    <i class="fas fa-arrow-left"></i> Back to Dashboard
+                </a>
+            </div>
+
+            <!-- Transaction List -->
+            {% if transactions %}
+                <div class="history-list">
+                    {% for transaction in transactions|reverse %}
+                        <div class="history-item">
+                            {% if 'Deposited' in transaction %}
+                                <div class="history-icon deposit">
+                                    <i class="fas fa-arrow-down"></i>
+                                </div>
+                            {% elif 'Withdrew' in transaction %}
+                                <div class="history-icon withdraw">
+                                    <i class="fas fa-arrow-up"></i>
+                                </div>
+                            {% elif 'Transferred' in transaction %}
+                                <div class="history-icon transfer">
+                                    <i class="fas fa-paper-plane"></i>
+                                </div>
+                            {% elif 'Received' in transaction %}
+                                <div class="history-icon receive">
+                                    <i class="fas fa-gift"></i>
+                                </div>
+                            {% elif 'created' in transaction %}
+                                <div class="history-icon create">
+                                    <i class="fas fa-user-plus"></i>
+                                </div>
+                            {% else %}
+                                <div class="history-icon create">
+                                    <i class="fas fa-circle"></i>
+                                </div>
+                            {% endif %}
+                            
+                            <div class="history-details">
+                                <div class="history-title">{{ transaction }}</div>
+                                <div class="history-date">Transaction Record</div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <!-- Empty State -->
+                <div class="card">
+                    <div class="empty-state">
+                        <div class="empty-state-icon">
+                            <i class="fas fa-receipt"></i>
+                        </div>
+                        <h3>No Transactions Yet</h3>
+                        <p>You haven't made any transactions. Start by making a deposit or transfer.</p>
+                        <a href="{{ url_for('deposit') }}" class="btn btn-primary" style="width: auto; display: inline-flex;">
+                            <i class="fas fa-plus"></i> Make First Deposit
+                        </a>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>&copy; 2024 Lootera Bank. All rights reserved. | Secure Digital Banking</p>
+    </footer>
+
+    <!-- Auto-hide flash messages -->
+    <script>
+        setTimeout(() => {
+            const flashMessages = document.querySelectorAll('.flash-message');
+            flashMessages.forEach(msg => {
+                msg.style.opacity = '0';
+                msg.style.transform = 'translateX(100px)';
+                msg.style.transition = 'all 0.4s ease-out';
+                setTimeout(() => msg.remove(), 400);
+            });
+        }, 5000);
+    </script>
+</body>
+</html>

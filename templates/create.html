@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Account - Lootera Bank</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="flash-messages">
+                {% for category, message in messages %}
+                    <div class="flash-message {{ category }}">
+                        <i class="fas fa-{% if category == 'success' %}check-circle{% elif category == 'error' %}exclamation-circle{% else %}info-circle{% endif %}"></i>
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
+    <nav class="navbar">
+        <div class="container">
+            <a href="/" class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-university"></i>
+                </div>
+                Lootera Bank
+            </a>
+            <div class="nav-links">
+                <a href="{{ url_for('index') }}">Home</a>
+                <a href="{{ url_for('login') }}">Login</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="transaction-page">
+        <div class="card card-wide">
+            <div class="card-header">
+                <div class="hero-logo" style="width: 60px; height: 60px; font-size: 1.5rem; margin-bottom: 1rem;">
+                    <i class="fas fa-user-plus"></i>
+                </div>
+                <h2>Open an Account</h2>
+                <p>Join Lootera Bank and start your digital banking journey</p>
+            </div>
+
+            <form method="POST" action="{{ url_for('create') }}">
+                <div class="form-group">
+                    <label for="name">
+                        <i class="fas fa-user"></i> Full Name
+                    </label>
+                    <input type="text" id="name" name="name" placeholder="Enter your full name" required autocomplete="name">
+                </div>
+
+                <!-- ✅ NEW EMAIL FIELD -->
+                <div class="form-group">
+                    <label for="email">
+                        <i class="fas fa-envelope"></i> Email Address
+                    </label>
+                    <input type="email" id="email" name="email" placeholder="Enter your email address" required autocomplete="email">
+                </div>
+
+                <div class="form-group">
+                    <label for="initial_deposit">
+                        <i class="fas fa-rupee-sign"></i> Initial Deposit
+                    </label>
+                    <input type="number" id="initial_deposit" name="initial_deposit" placeholder="Enter initial deposit amount (minimum ₹1)" required min="1" step="1">
+                </div>
+
+                <div class="form-group">
+                    <label for="pin">
+                        <i class="fas fa-lock"></i> Set 4-Digit PIN
+                    </label>
+                    <input type="password" id="pin" name="pin" placeholder="Create a 4-digit PIN" required minlength="4" maxlength="4" pattern="[0-9]{4}" inputmode="numeric">
+                </div>
+
+                <div class="form-group">
+                    <label for="confirm_pin">
+                        <i class="fas fa-lock"></i> Confirm PIN
+                    </label>
+                    <input type="password" id="confirm_pin" name="confirm_pin" placeholder="Confirm your 4-digit PIN" required minlength="4" maxlength="4" pattern="[0-9]{4}" inputmode="numeric">
+                </div>
+
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-check-circle"></i>
+                    Create Account
+                </button>
+            </form>
+
+            <div class="text-center mt-3">
+                <p>Already have an account? <a href="{{ url_for('login') }}">Login here</a></p>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <p>&copy; 2024 Lootera Bank. All rights reserved. | Secure Digital Banking</p>
+    </footer>
+
+    <script>
+        setTimeout(() => {
+            const flashMessages = document.querySelectorAll('.flash-message');
+            flashMessages.forEach(msg => {
+                msg.style.opacity = '0';
+                msg.style.transform = 'translateX(100px)';
+                msg.style.transition = 'all 0.4s ease-out';
+                setTimeout(() => msg.remove(), 400);
+            });
+        }, 5000);
+
+        document.querySelector('form').addEventListener('submit', function(e) {
+            const pin = document.getElementById('pin').value;
+            const confirmPin = document.getElementById('confirm_pin').value;
+
+            if (pin !== confirmPin) {
+                e.preventDefault();
+                alert('PINs do not match!');
+            }
+        });
+    </script>
+</body>
+</html>
