@@ -91,11 +91,14 @@ Please keep this number safe. Never share your PIN.
     msg["To"] = to_email
 
     try:
-        with smtplib.SMTP_SSL("smtp.gmail.com", 465) as server:
-            server.login(sender_email, app_password)
-            server.send_message(msg)
+        server = smtplib.SMTP_SSL("smtp.gmail.com", 465, timeout=10)
+        server.login(sender_email, app_password)
+        server.send_message(msg)
+        server.quit()
+        print("Email sent successfully")
     except Exception as e:
-        print("Email failed:", e)
+        print("Email failed but app continues:", e)
+
 
 
 @app.route("/")
